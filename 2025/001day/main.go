@@ -9,6 +9,10 @@ import (
 )
 
 func main() {
+	Part_two()
+}
+
+func Part_one() {
 	data, err := os.ReadFile("./001part1.txt")
 	if err != nil {
 		log.Println("error occured:", err)
@@ -43,4 +47,58 @@ func main() {
 	}
 
 	fmt.Println("zeroth position reached for ", zero_reach_count)
+}
+
+func Part_two() {
+	data, err := os.ReadFile("./001part1.txt")
+	if err != nil {
+		log.Println("error occured:", err)
+		return
+	}
+
+	complete := strings.TrimSpace(string(data))
+	lines := strings.Split(complete, "\n")
+
+	currentPos := 50
+	totalZeroEvents := 0
+	dialSize := 100
+
+	for _, line := range lines {
+		dir := line[:1]
+		moves, err := strconv.Atoi(line[1:])
+		if err != nil {
+			log.Println("error reading movement:", err)
+			continue
+		}
+
+		if dir == "R" {
+			currentPos = currentPos + moves
+			totalZeroEvents += currentPos / dialSize
+			currentPos = currentPos % dialSize
+
+		} else {
+			old_pos := currentPos
+			currentPos = currentPos - moves
+
+			if currentPos == 0 {
+				totalZeroEvents++
+			}
+
+			if currentPos < 0 {
+				if old_pos != 0 {
+					totalZeroEvents++
+				}
+
+				extra_cycle := (moves - old_pos) / dialSize
+				if extra_cycle > 0 {
+					totalZeroEvents += extra_cycle
+				}
+
+				currentPos = ((currentPos % dialSize) + dialSize) % dialSize
+			}
+
+		}
+
+	}
+	fmt.Println("Total zero events:", totalZeroEvents)
 }
