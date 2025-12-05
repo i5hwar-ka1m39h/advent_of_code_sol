@@ -10,22 +10,34 @@ import (
 )
 
 func main() {
-	// string_holder, _ := Give_out_array()
-	//
-	// fmt.Println("size of the origial set", len(string_holder))
-	// var valid_val_arr []Range
-	// for _, val := range string_holder {
-	// 	range_val, _ := Check_range_odd(val)
-	//
-	// 	if range_val != nil {
-	// 		valid_val_arr = append(valid_val_arr, *range_val)
-	// 	}
-	// }
-	//
-	// fmt.Println("here is valid array", valid_val_arr)
-	// fmt.Println("size of the cleared one", len(valid_val_arr))
+	string_holder, _ := Give_out_array()
 
-	Is_valid_id("1188511885")
+	fmt.Println("size of the origial set", len(string_holder))
+	var valid_val_arr []Range
+	for _, val := range string_holder {
+		range_val, _ := Check_range_odd(val)
+
+		if range_val != nil {
+			valid_val_arr = append(valid_val_arr, *range_val)
+		}
+	}
+
+	fmt.Println("here is valid array", valid_val_arr)
+	fmt.Println("size of the cleared one", len(valid_val_arr))
+
+	holder := 0
+	for _, val := range valid_val_arr {
+		start, _ := strconv.Atoi(val.start)
+		end, _ := strconv.Atoi(val.end)
+
+		for i := start; i <= end; i++ {
+			if !Is_valid_id(strconv.Itoa(i)) {
+				holder += i
+			}
+		}
+	}
+
+	fmt.Println("the sum is", holder)
 }
 
 func Give_out_array() ([]string, error) {
@@ -36,7 +48,7 @@ func Give_out_array() ([]string, error) {
 	}
 
 	var full_string string = string(data)
-	num_store := strings.Split(full_string, ",")
+	num_store := strings.Split(strings.TrimSpace(full_string), ",")
 	return num_store, nil
 }
 
